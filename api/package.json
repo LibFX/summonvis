@@ -1,0 +1,21 @@
+{
+  "name": "summonvis",
+  "version": "1.0.0",
+  "description": "Summon Visualization API server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.3.0",
+    "coffee-script": "^1.12.5",
+    "coffee-script-mapped": "^0.1.7",
+    "inotify": "^1.4.1",
+    "minimist": "^1.2.0",
+    "moment": "^2.18.1",
+    "request": "^2.81.0",
+    "socket.io": "^1.7.3"
+  }
+}
