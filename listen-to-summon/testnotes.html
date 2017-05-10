@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html ng-app lang="en">
+<head>
+<title>Sound 2014</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+<style>
+</style>
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular-sanitize.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.0/moment.min.js"></script>
+<script src="js/howler.min.js"></script>
+<script src="../barrier.js"></script>
+<script src="js/sound.js"></script>
+<script type="text/javascript">
+var soundMgr = new SoundManager(50);
+
+function PageController($scope, $sce) {
+    $scope.playCelesta = function(i) {
+        soundMgr.CELESTA[i].play();
+    }
+    $scope.playClav = function(i) {
+        soundMgr.CLAV[i].play();
+    }
+    $scope.playSwell = function(i) {
+        soundMgr.SWELLS[i].play();
+    }
+    $scope.play = function(i) {
+        soundMgr.playSound(i, soundMgr.CELESTA, 1);
+    } 
+
+    $scope.celesta = _.range(0, soundMgr.CELESTA.length);
+    $scope.clav = _.range(0, soundMgr.CLAV.length);
+    $scope.swells = _.range(0, soundMgr.SWELLS.length);
+}
+</script>
+</head>
+<body>
+<div class="container theme-showcase">
+<h2>Sound Demo</h2>
+<div class="row">
+    <div class="col-lg-12">
+    <div ng-controller="PageController">
+        <table class="table"> 
+            <tr>
+                <td>Celesta</td>
+                <td ng-repeat="sound in celesta" ng-click="playCelesta(sound)">{{sound}}</td>
+            </tr>
+            <tr>
+                <td>Clav</td>
+                <td ng-repeat="sound in clav" ng-click="playClav(sound)">{{sound}}</td>
+            </tr>
+            <tr>
+                <td>Swell</td>
+                <td ng-repeat="sound in swells" ng-click="playSwell(sound)">{{sound}}</td>
+            </tr>
+        </table>
+            <label>Celesta:</label> 
+            <input type="text" ng-model="pitch"/>
+            <button ng-click="play(pitch)">Play</button>
+    </div>
+</div>
+</div>
+
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+/**
+ * LibFX style sheet
+ */
+
+.libfx-cubeface {
+    padding: 20px;
+    font-family: "Droid Sans", sans-serif;
+    height: 552px;
+    width: 540px;
+    overflow: hidden;
+}
+
+.libfx-cubeface p {
+    padding: 0px;
+    margin: 0px 0px 3px 0px;
+}
+
+.libfx-timestamp {
+    margin: 0px 0px 5px 0px;
+    /* http://designshack.net/articles/css/12-fun-css-text-shadows-you-can-copy-and-paste/ */
+    background-color: #666666;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;
+}
+
+.libfx-record-title {
+    font-size: x-large;
+    color: blue;
+    text-shadow: 1px 2px 2px rgba(0,0,255,0.3);
+}
+
+.libfx-record-authors {
+    color: #660000;
+    text-shadow: 1px 1px 1px rgba(102,0,0,0.3);
+}
+
+.libfx-record-publicationtitle {
+    font-style: italic;
+}
+
+.libfx-bookcover-sm, .libfx-bookcover-md, .libfx-bookcover-lg {
+    float: left;
+    padding: 0px 6px 8px 6px;
+}
+
+
+.libfx-heading, .syn_title {
+    font-weight: bold;
+}
+
+/* turn transitions off, temporarily */
+.libfx-notransition {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  -ms-transition: none !important;
+  transition: none !important;
+}
+
+.libfx-ticker-delta {
+    font-size: small;
+    vertical-align: super;
+}
+
+.libfx-ticker-delta-up {
+    color: green;
+}
+
+.libfx-ticker-delta-down {
+    color: red;
+}
+
+.libfx-ticker-delta-eq {
+    color: blue;
+}
+
+.libfx-ticker-lead {
+    font-weight: bold;
+}
+
+.libfx-box {
+    margin: 0px;
+    padding: 4px;
+    /* background-color: #DCF2FE; */
+    border-radius: 5px;
+    border: 2px solid #191970;
+    background: rgb(242,245,246,.8); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(242,245,246,1) 0%, rgba(227,234,237,1) 37%, rgba(200,215,220,1) 100%); /* FF3.6+ */
+    background: -o-linear-gradient(top, rgba(242,245,246,1) 0%,rgba(227,234,237,1) 37%,rgba(200,215,220,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(242,245,246,1) 0%,rgba(227,234,237,1) 37%,rgba(200,215,220,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(242,245,246,1.0) 0%,rgba(227,234,237,.95) 37%,rgba(200,215,220,0.9) 100%); /* W3C */
+}
+
+/*
+
+*/
+.libfx-recordscroll-list {
+    margin: 0px;
+    padding: 2px;
+    list-style-type: none;
+
+    background-color: #DCF2FE;
+    border: 2px solid #191970;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.libfx-record-inner {
+    font-size: 0.9em;
+    font-family: 'Droid Sans', sans-serif;
+}
+
+.libfx-record {
+    padding: 0.1em;
+    border-bottom: 1px outset #191970;
+    overflow: hidden;
+}
+
+.libfx-record-pusher {
+    margin-top: -100%; 
+}
+
+.libfx-record-timestamp {
+    font-weight: bold;
+}
+
+/* Global CSS Reset:
+ * http://stackoverflow.com/questions/9547291/how-to-remove-margin-space-around-body-or-clear-default-css-styles
+ */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.hd {
+    position: relative;
+    left: 0px;
+    top: 0px;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+}
+
+.hdtoprow {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 1920px;
+    height: 540px;
+}
+
+.hdbottomrow {
+    position: absolute;
+    left: 0px;
+    top: 540px;
+    width: 1920px;
+    height: 540px;
+}
+
+.hd4 svg {
+    vertical-align: top;
+    margin: 0px;
+}
+
+.hd4left {
+    position: absolute;
+    width: 960px;
+    height: 540px;
+    overflow: hidden;
+}
+
+.hd4right {
+    left: 960px;
+    width: 960px;
+    height: 540px;
+    overflow: hidden;
+    position: absolute;
+}
+
+.c1 {
+    background-color: gray;
+}
+
+.c2 {
+    background-color: blue;
+}
+
+.c3 {
+    background-color: green;
+}
+
+.c4 {
+    background-color: yellow;
+}
+
+.libfx-infobox {
+    float: right; 
+    width: 330px; 
+    height: 200px; 
+    margin-right: 10px;
+    background-color: #DCF2FE;
+    border: 2px solid #191970;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.libfx-infobox p {
+    -webkit-margin-before: 0px;
+    -webkit-margin-after: .5em;
+}
+
+.libfx-scroller-container {
+    height: 40px; 
+    overflow:hidden; 
+    position:relative; 
+    border:1px 
+    solid #aaa; 
+    margin:0 auto;
+
+    -o-box-shadow:      2px 2px 10px rgba(0, 0, 0, 0.7);
+    -moz-box-shadow:    2px 2px 10px rgba(0, 0, 0, 0.7);
+    -webkit-box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+    box-shadow:         2px 2px 10px rgba(0, 0, 0, 0.7);
+
+    -o-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    font-family: Verdana, sans-serif; 
+    font-size:16px; 
+    line-height:32px; 
+    color:#000; 
+    padding: 0 0;
+}
+
+.libfx-scroller {
+    height:100%; 
+    width: auto;
+    position:absolute; 
+    top:0;
+}
+
+.libfx-scroller div {
+    display: table-cell;    /* this prevents line breaks, meaning all children appear in a row */
+}

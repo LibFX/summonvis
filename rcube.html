@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+<link rel="stylesheet" href="css/libfx.css" type="text/css"></link>
+<!-- Originally adapted from http://www.the-art-of-web.com/css/rotating-cube/ -->
+<link rel="stylesheet" href="css/rcube.css" type="text/css"></link>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="js/moment.min.js" type="text/javascript"></script>
+<script src="js/formatsummonrecords.js" type="text/javascript"></script>
+<script src="http://libx.lib.vt.edu:8081/socket.io/socket.io.js"></script>
+</head>
+
+<body style="margin: 10em; background-color: gray;">
+
+<div class="libfx-cubespinner-viewport">
+    <div class="libfx-cubespinner">
+        <div id="daspinner" class="libfx-cubespinner-inner libfx-cubespinner6arrived">
+            <div class="libfx-cube-face1">
+                    <img src="images/summon_logo-02.png" 
+                        style="position:absolute; width=520px; left:20px; top:110px">
+            </div>
+            <div class="libfx-cube-face2"></div>
+            <div class="libfx-cube-face3"></div>
+            <div class="libfx-cube-face4 libfx-cube-hidebackface"></div>
+            <div class="libfx-cube-face5"></div>
+            <div class="libfx-cube-face6"></div>
+        </div>
+    </div>
+</div>
+<!--
+<div id="qrcode"></div>
+-->
+<script>
+var socket = io.connect('http://libx.lib.vt.edu:8081');
+socket.on('connect', function (data) {
+    socket.emit("subscribe", { sendlastnevents : 6, keys: [ 'Record' ]});
+});
+
+$(function () {
+    var $s = $("#daspinner");
+    var hide = [5, 6, 1, 2, 3, 4];
+    var state = 0;
+    var laststate = 5;
+    var facesOccupied = 0;
+
+    function animStepDone() {
+        $s.addClass("libfx-cubespinner" + (laststate+1) + "arrived");
+        var lastclass = "libfx-cubespinner" + (laststate+1);
+        $s.removeClass(lastclass);
+        outstandinganim--;
+    }
+
+    function insertNextFace() {
+        var findex = nextFaceIndex;
+        if (++nextFaceIndex == 7) nextFaceIndex = 1;
+        var obj = letterQueue.shift();
+        $(".libfx-cube-face" + findex).html(obj.html);
+        obj.runafterinsert && obj.runafterinsert();
+        $("#qrcode").html(obj.qrcode);
+    }
+
+    function nextAnimStep() {
+        insertNextFace();
+        var nextclass = "libfx-cubespinner" + (state+1);
+        $s.removeClass("libfx-cubespinner" + (laststate+1) + "arrived");
+        $(".libfx-cube-face" + (hide[laststate])).removeClass("libfx-cube-hidebackface");
+        $(".libfx-cube-face" + (hide[state])).addClass("libfx-cube-hidebackface");
+        $s.addClass(nextclass);
+        laststate = state;
+        state = (state + 1) % 6;
+    }
+
+    var outstandinganim = 0;
+    var letterQueue = [];
+    var nextFaceIndex = 2;
+    $s.on('webkitAnimationEnd oAnimationEnd animationend msAnimationEnd', 
+        function (event) {
+            animStepDone();
+            setTimeout(function () {
+                if (letterQueue.length > 0 && outstandinganim > 0)
+                    nextAnimStep();
+            }, 5000);
+        });
+
+    function addToAnimation(what) {
+        letterQueue.push(what);
+        if (outstandinganim++ == 0) {
+            nextAnimStep();
+        }
+    }
+
+    socket.on('data', function (obj) {
+        var obj = formatRecord2(obj.data);
+        addToAnimation(obj);
+    });
+});
+</script>
+</body>
+</html>

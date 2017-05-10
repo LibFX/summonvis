@@ -1,0 +1,224 @@
+/** rewrite using multiple keyframes */
+
+@-webkit-keyframes spincube {
+  from,to  { }
+  16%      { -webkit-transform: rotateY(-90deg);  }
+  33%      { -webkit-transform: rotateY(-90deg) rotateZ(90deg); }
+  50%      { -webkit-transform: rotateY(-180deg) rotateZ(90deg); }
+  66%      { -webkit-transform: rotateY(90deg) rotateX(90deg);  }
+  83%      { -webkit-transform: rotateX(90deg); }
+}
+
+.libfx-cubespinner-inner {
+  -webkit-transform-style: preserve-3d;
+  -webkit-transform-origin: 300px 300px 0;
+}
+
+.libfx-cubespinner1 {
+  -webkit-animation-name: spincube1;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 2s;
+}
+
+@-webkit-keyframes spincube1 {
+  from     { }
+  to       { -webkit-transform: rotateY(-90deg);  }
+}
+
+.libfx-cubespinner1arrived {
+  -webkit-transform: rotateY(-90deg);  
+}
+
+.libfx-cubespinner2 {
+  -webkit-animation-name: spincube2;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 2s;
+}
+
+@-webkit-keyframes spincube2 {
+  from       { -webkit-transform: rotateY(-90deg);  }
+  to      { -webkit-transform: rotateY(-90deg) rotateZ(90deg); }
+}
+
+.libfx-cubespinner2arrived {
+  -webkit-transform: rotateY(-90deg) rotateZ(90deg);
+}
+
+.libfx-cubespinner3 {
+  -webkit-animation-name: spincube3;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 2s;
+}
+
+@-webkit-keyframes spincube3 {
+  from      { -webkit-transform: rotateY(-90deg) rotateZ(90deg); }
+  to      { -webkit-transform: rotateY(-180deg) rotateZ(90deg); }
+}
+
+.libfx-cubespinner3arrived {
+  -webkit-transform: rotateY(-180deg) rotateZ(90deg);
+}
+
+.libfx-cubespinner4 {
+  -webkit-animation-name: spincube4;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 2s;
+}
+
+@-webkit-keyframes spincube4 {
+  from      { -webkit-transform: rotateY(-180deg) rotateZ(90deg); }
+  to      { -webkit-transform: rotateY(90deg) rotateX(90deg);  }
+}
+
+.libfx-cubespinner4arrived {
+  -webkit-transform: rotateY(90deg) rotateX(90deg);
+}
+
+.libfx-cubespinner5 {
+  -webkit-animation-name: spincube5;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 2s;
+}
+
+@-webkit-keyframes spincube5 {
+  from      { -webkit-transform: rotateY(90deg) rotateX(90deg);  }
+  to      { -webkit-transform: rotateX(90deg); }
+}
+
+.libfx-cubespinner5arrived {
+  -webkit-transform: rotateX(90deg);
+}
+
+.libfx-cubespinner6 {
+  -webkit-animation-name: spincube6;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 2s;
+}
+
+@-webkit-keyframes spincube6 {
+  from      { -webkit-transform: rotateX(90deg); }
+  to        { }
+}
+
+.libfx-cubespinner6arrived {
+}
+
+@-moz-keyframes spincube {
+  from,to  { }
+  16%      { -moz-transform: rotateY(-90deg);  }
+  33%      { -moz-transform: rotateY(-90deg) rotateZ(90deg); }
+  50%      { -moz-transform: rotateY(-180deg) rotateZ(90deg); }
+  66%      { -moz-transform: rotateY(90deg) rotateX(90deg);  }
+  83%      { -moz-transform: rotateX(90deg); }
+}
+-ms-keyframes spincube {
+  from,to  { }
+  16%      { -ms-transform: rotateY(-90deg);  }
+  33%      { -ms-transform: rotateY(-90deg) rotateZ(90deg); }
+  50%      { -ms-transform: rotateY(-180deg) rotateZ(90deg); }
+  66%      { -ms-transform: rotateY(90deg) rotateX(90deg);  }
+  83%      { -ms-transform: rotateX(90deg); }
+}
+
+.libfx-cubespinner-viewport {
+  /* http://desandro.github.io/3dtransforms/examples/perspective-03.html */
+  -webkit-perspective: 2000;
+  -webkit-perspective-origin: 50% 100%;
+}
+
+.libfx-cubespinner {
+  -webkit-transform: 
+        /*
+        rotateX(-15deg) 
+        rotateY(-10deg) 
+        */
+        rotateX(-5deg) 
+        rotateY(-7deg) 
+        translateY(0px)
+        scale3d(0.8,0.8,0.8)
+            ;
+  -webkit-transform-style: preserve-3d;
+}
+
+.libfx-cubespinner-dashboard {
+  -webkit-transform: 
+        /*
+        rotateX(-15deg) 
+        rotateY(-10deg) 
+        */
+        rotateX(-5deg) 
+        rotateY(-7deg) 
+        translateX(-170px)
+        translateY(-60px)
+        scale3d(0.59,0.59,0.59)
+            ;
+  -webkit-transform-style: preserve-3d;
+}
+
+.libfx-cubespinner-inner > div {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border: 1px solid #ccc;
+  background: rgba(200,200,200,.8);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+
+  // http://www.colorzilla.com/gradient-editor/
+
+    background: rgb(242,245,246,.8); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(242,245,246,1) 0%, rgba(227,234,237,1) 37%, rgba(200,215,220,1) 100%); /* FF3.6+ */
+    background: -o-linear-gradient(top, rgba(242,245,246,1) 0%,rgba(227,234,237,1) 37%,rgba(200,215,220,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(242,245,246,1) 0%,rgba(227,234,237,1) 37%,rgba(200,215,220,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(242,245,246,1.0) 0%,rgba(227,234,237,.95) 37%,rgba(200,215,220,0.9) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f5f6', endColorstr='#c8d7dc',GradientType=0 ); /* IE6-9 */
+
+
+  -webkit-transition: opacity 2s;
+  transition: opacity 2s;
+}
+
+.libfx-cube-hidebackface {
+  opacity: 0;
+/*
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+*/
+}
+
+.libfx-cubespinner .libfx-cube-face1 {
+  -webkit-transform: translateZ(300px);
+  -moz-transform: translateZ(300px);
+  -ms-transform: translateZ(300px);
+}
+.libfx-cubespinner .libfx-cube-face2 {
+  -webkit-transform: rotateY(90deg) translateZ(300px);
+  -moz-transform: rotateY(90deg) translateZ(300px);
+  -ms-transform: rotateY(90deg) translateZ(300px);
+}
+.libfx-cubespinner .libfx-cube-face3 {
+  -webkit-transform: rotateY(90deg) rotateX(90deg) translateZ(300px);
+  -moz-transform: rotateY(90deg) rotateX(90deg) translateZ(300px);
+  -ms-transform: rotateY(90deg) rotateX(90deg) translateZ(300px);
+}
+.libfx-cubespinner .libfx-cube-face4 {
+  -webkit-transform: rotateY(180deg) rotateZ(90deg) translateZ(300px);
+  -moz-transform: rotateY(180deg) rotateZ(90deg) translateZ(300px);
+  -ms-transform: rotateY(180deg) rotateZ(90deg) translateZ(300px);
+}
+.libfx-cubespinner .libfx-cube-face5 {
+  -webkit-transform: rotateY(-90deg) rotateZ(90deg) translateZ(300px);
+  -moz-transform: rotateY(-90deg) rotateZ(90deg) translateZ(300px);
+  -ms-transform: rotateY(-90deg) rotateZ(90deg) translateZ(300px);
+}
+.libfx-cubespinner .libfx-cube-face6 {
+  -webkit-transform: rotateX(-90deg) translateZ(300px);
+  -moz-transform: rotateX(-90deg) translateZ(300px);
+  -ms-transform: rotateX(-90deg) translateZ(300px);
+}
+

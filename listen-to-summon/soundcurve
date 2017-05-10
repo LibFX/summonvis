@@ -1,0 +1,8 @@
+max_pitch = 100
+log_used = 1.0715307808111486871978099
+min(a, b) = (a < b) ? a : b
+max(a, b) = (a > b) ? a : b
+pitch(size) = 100 - min(max_pitch, log(size + log_used) / log(log_used))
+index(size) = floor(pitch(size) / 100.0 * 27.0)
+set xrange [0:800]
+plot index(x) with impulses

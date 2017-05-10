@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ticker</title>
+<link rel="stylesheet" href="css/libfx.css" type="text/css"></link>
+<style>
+body {
+    font-family: Verdana, sans-serif; 
+}
+
+.libfx-scroller-container {
+    height: 40px; 
+    overflow:hidden; 
+    position:relative; 
+    border:1px 
+    solid #aaa; 
+    margin:0 auto;
+
+    -o-box-shadow:      2px 2px 10px rgba(0, 0, 0, 0.7);
+    -moz-box-shadow:    2px 2px 10px rgba(0, 0, 0, 0.7);
+    -webkit-box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+    box-shadow:         2px 2px 10px rgba(0, 0, 0, 0.7);
+
+    -o-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    font-family: Verdana, sans-serif; 
+    font-size:16px; 
+    line-height:32px; 
+    color:#000; 
+    padding: 0 0;
+}
+
+.libfx-scroller {
+    height:100%; 
+    width: auto;
+    position:absolute; 
+    top:0;
+}
+
+.libfx-scroller div {
+    display: table-cell;    /* this prevents line breaks, meaning all children appear in a row */
+}
+
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="js/moment.min.js" type="text/javascript"></script>
+<script src="http://libx.lib.vt.edu:8081/socket.io/socket.io.js"></script>
+<script>
+var socket = io.connect('http://libx.lib.vt.edu:8081');
+socket.on('connect', function (data) {
+    socket.emit("subscribe", [ 
+        'Discipline.last50' 
+    ]);
+});
+
+$(function () {
+    var $sb = $("#scroller");
+    var $s = $("<div class='libfx-scroller'></div>");
+    $sb.append($s);
+
+    var $hs = $("<div class='libfx-scroller'></div>");
+    $hs.css({ left: "-50000px" });
+    $sb.append($hs);
+    
+    var tickerQueue = [];
+
+    function formatItem(dis, timestamp, lastDisciplines) {
+        var fts = moment(timestamp).format('MMM Do YYYY, h:mm:ss a');
+        var html = "<div>";
+        html += '<span class="libfx-ticker-delta">&nbsp;</span>';
+        html += '<span class="libfx-ticker-lead">' + fts + ':</span> ';
+
+        var dd = [];
+        for (var d in dis)
+            dd.push(d);
+        dd.sort(function (a, b) { return dis[b] - dis[a]; });
+        function addTick(label, value, delta) {
+            html += label + ": " + value + " ";
+            html += '<span class="libfx-ticker-delta ';
+            if (delta != 0) {
+                if (delta > 0)
+                    html += 'libfx-ticker-delta-up">(&#x25B2;' + delta + ")</span>";
+                else
+                    html += 'libfx-ticker-delta-down">(&#x25BC;' + delta + ")</span>";
+            } else
+                html += 'libfx-ticker-delta-eq">(&#x25B6; 0)</span>';
+            html += "&nbsp;";
+            html += "&nbsp;";
+        }
+
+        for (var i = 0; i < dd.length; i++) {
+            var d = dd[i];
+            if (lastDisciplines != null && d in lastDisciplines) {
+                var delta = dis[d] - lastDisciplines[d];
+            } else {
+                var delta = dis[d];
+            }
+            addTick(d, dis[d], delta);
+        }
+
+        // add deltas for disciplines that were removed
+        for (var lDis in lastDisciplines) {
+            if (lDis in dis) continue;
+            addTick(lDis, 0, -lastDisciplines[lDis]);
+        }
+
+        html += "&nbsp;</div>";
+        return $(html);
+    }
+
+    var second2perpixel = 50/5000;  // 5000px in 50seconds seems a good speed
+    // second2perpixel /= 5;   // faster
+
+    var animationState = { 
+        S : $s.parent().width(),
+        computeDuration: function (width) {
+            this.duration = second2perpixel * width;
+        }
+    }
+    var scrollingItems = [];
+
+    $s.on('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function (event) {
+        if (tickerQueue.length == 0) { // no new item, repeat last item
+            var last = scrollingItems[scrollingItems.length-1];
+            scrollingItems.push({
+                content: last.content.clone(),
+                width: last.width
+            });
+        } else {
+            scrollingItems.push(tickerQueue.shift());
+        }
+
+        // remove items that are completely outside visible area
+        var leftShifted = false;
+        while (animationState.left + scrollingItems[0].width < 0) {
+            animationState.left += scrollingItems[0].width;
+            animationState.totalWidth -= scrollingItems[0].width;
+            $s.find('div:first-child').remove();
+            scrollingItems.shift();
+            leftShifted = true;
+        }
+
+        if (leftShifted) {  // we need to adjust left, but don't want it to animate
+            $s.addClass('libfx-notransition');
+            $s.css({ 'left' : animationState.left });
+            $s.redraw();
+            $s.removeClass('libfx-notransition');
+        }
+        // ------------------
+
+        var newItem = scrollingItems[scrollingItems.length-1];
+        animationState.totalWidth += newItem.width;
+        $s.append(newItem.content);
+        animationState.computeDuration(newItem.width);
+        animationState.left = animationState.S - animationState.totalWidth;
+
+        $s.css({
+            '-webkit-transition': 'left ' + animationState.duration + 's linear',
+            'transition': 'left ' + animationState.duration + 's linear'
+        });
+
+        $s.width(animationState.totalWidth);
+        $s.css({ 'left' : animationState.left });
+    });
+
+    /* determine rendered width by adding it to a parent, measuring its
+     * width, and removing it.  Parent's style (fonts, etc.)
+     * may determine the width.
+     */
+    function getWidth($content, $parent) {
+        $content.css({
+            position: 'absolute',
+            left: '-40000px'
+        });
+        $parent.append($content);
+        var w = $content.width();
+        $content.css({
+            position: '',
+            left: ''
+        });
+        $content.remove();
+        return w;
+    }
+
+    // http://blog.alexmaccaw.com/css-transitions
+    $.fn.redraw = function() {
+        $(this).each(function() {
+            var redraw = this.offsetHeight;
+        });
+    };
+
+    function startTicker() {
+        var o = tickerQueue.shift();
+        $s.append(o.content);
+        animationState.totalWidth = o.width;
+        animationState.computeDuration(o.width);
+        $s.css({ 'left' : animationState.S });
+        $s.redraw();
+        $s.css({
+            '-webkit-transition': 'left ' + animationState.duration + 's linear',
+            'transition': 'left ' + animationState.duration + 's linear'
+        });
+        $s.css({ 'left' : animationState.left = animationState.S - o.width });
+        scrollingItems.push(o);
+    }
+
+    var tickerRunning = false;
+    var maxQueueLength = 5;
+
+    socket.on('data', function (obj) {
+        var disciplines = obj.data.Discipline;
+        var timestamp = obj.data.timestamp;
+        if (tickerQueue.length > maxQueueLength)
+            tickerQueue.shift();
+
+        var lastDisciplines = tickerQueue.length > 0 ? tickerQueue[0].disciplines : null;
+        var $content = formatItem(disciplines, timestamp, lastDisciplines);
+
+        var w = getWidth($content, $hs);
+        tickerQueue.push({ content: $content, width: w, disciplines: disciplines });
+        if (!tickerRunning) {
+            startTicker();
+            tickerRunning = true;
+        }
+    });
+});
+</script>
+
+</head>
+<body>
+<h2>Live ticker of Summon Disciplines</h2>
+<div id="scroller" class="libfx-scroller-container" style="width: 900px">
+</div>
+<p>
+This ticker shows a ticker-style histogram of the disciplines accessed in the last 50 Summon
+hits.  The deltas shown are between the current histogram and the histogram 10 clicks ago.
+</p>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>libFX - Summon WordCloud</title>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<link href="css/libfx.css" rel="stylesheet"></link>
+<style>
+* {
+    margin: 0;
+}
+body {
+    overflow: hidden;
+}
+#header {
+    background: #f8f8f8;
+    margin: 0;
+    padding: 0.2em 0 0.2em 0.5em;
+}
+</style>
+<script src="js/moment.min.js" type="text/javascript"></script>
+<script src="js/wordcloud.js" type="text/javascript"></script>
+
+<script src="js/variabledelayqueue.js" type="text/javascript"></script>
+
+<script src="d3/d3.min.js"></script>
+<script src="d3-cloud/d3.layout.cloud.js"></script>
+<script src="js/d3helper.js" type="text/javascript"></script>
+
+<script src="http://libx.lib.vt.edu:8081/socket.io/socket.io.js"></script>
+<script>
+var socket = io.connect('http://libx.lib.vt.edu:8081');
+var key = location.hash == "" ? "SubjectTerms.last50" : location.hash.substring(1);
+console.log("using subscription key: " + key);
+
+socket.on('connect', function (data) {
+    socket.emit("subscribe", { keys: [ key ], sendlastnevents: 1 });
+});
+
+$(function () {
+    var wordCloud = null;
+    var currentView = {
+        area: "#area",
+        header: "#header",
+        callback: function () {
+            wordCloud && wordCloud.redraw()
+        }
+    };
+    var svg = createFullScreenSVG(currentView);
+
+    var widgets = { }
+    widgets[key] = wordCloud = new WordCloudWidget({
+        key: key.split('.')[0],
+        svg: svg,
+        currentView: currentView
+    });
+
+    socket.on('data', function (data) {
+        // console.dir(data);
+        if (data.key in widgets)
+            widgets[data.key].update(data.data);
+    });
+});
+
+</script>
+</head>
+<body>
+    <div id='header'>
+      <h1>Summon Wordcloud</h1>
+    </div>
+    <div id='area'> </div>
+</body>
+</html>

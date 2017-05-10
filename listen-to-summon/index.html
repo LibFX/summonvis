@@ -1,0 +1,101 @@
+<html>
+<head>
+    <title>Hatnote Listen to Summon</title>
+    <meta name="title" content="Hatnote Listen to Summon">
+    <meta name="description" content="Listen to recent changes on Wikipedia">
+    <meta name="keywords" content="hatnote, listen, sound, music, visualization">
+    <meta name="author" content="Godmar Back based on Stephen LaPorte and Mahmoud Hashemi">
+    <link rel="stylesheet" type="text/css" href="css/nouislider.custom.css">
+    <script src="js/seedrandom.js" type="text/javascript"></script>
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/d3.min.js"></script>
+
+    <script src="js/moment.min.js" type="text/javascript"></script>
+    <script src="../js/variabledelayqueue.js" type="text/javascript"></script>
+    <script src="../js/barrier.js" type="text/javascript"></script>
+    <script src="../js/d3helper.js" type="text/javascript"></script>
+    <script src="../js/disciplinemapping.js" type="text/javascript"></script>
+
+    <script src="js/howler.min.js" type="text/javascript"></script>
+    <script src="js/sound.js" type="text/javascript"></script>
+    <script src="js/app.js" type="text/javascript"></script>
+    <script src="js/jquery.nouislider.min.js"></script>
+
+<script src="http://libx.lib.vt.edu:8081/socket.io/socket.io.js"></script>
+<script>
+var socket = io.connect('http://libx.lib.vt.edu:8081');
+socket.on('connect', function (data) {
+    socket.emit("subscribe", [ 'Record' ]);
+});
+
+</script>
+
+    <script>
+
+    /* Settings
+       ======== */
+
+    var scale_factor = 20;
+
+    /* Colors
+       ====== */
+
+    var body_background_color = '#f8f8f8',
+        body_text_color = '#0e131e',
+        svg_background_color = '#1c2733',
+        svg_text_color = '#fff',
+        edit_color = '#fff',
+        total_edits = 0;
+
+    var s_titles = true
+        ;
+
+    var soundMgr;
+    $(function(){
+        soundMgr = new SoundManager(50);
+
+        /* global */ currentView = {
+            area: "#area",
+            header: "#header",
+        };
+
+        var svg = createFullScreenSVG(currentView)
+            .style('background-color', svg_background_color);
+
+        var widgets = {
+            "Record" : new RecordPainter(svg)
+        }
+
+        socket.on('data', function (data) {
+            if (data.key in widgets)
+                widgets[data.key].update(data.data);
+        });
+
+        $("#volumeSlider").noUiSlider({
+            range : [-99, 0],
+            start : 0,
+            handles : 1,
+            step : 1,
+            orientation : "horizontal",
+            slide : function() {
+                soundMgr.setVolume(100 + $(this).val());
+            }
+        });
+    })
+</script>
+
+<link href='css/style.css' rel='stylesheet' type='text/css'></link>
+
+</head>
+<body>
+    <div id='header'>
+        <span class="about-link">
+            <span id="volumeWrapper" class="interface">
+                <span id="volumeSlider" class="noUiSlider"> </span>
+            </span>
+        </span>
+      <h1>Listen to Summon</h1>
+    </div>
+    <div id='area'></div>
+</body>
+</html>
